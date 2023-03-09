@@ -1,0 +1,44 @@
+
+xmin = 0; xmax = 0.2;
+N =11;
+dx = (xmax - xmin)/(N-1);
+x = xmin : dx :xmax;
+
+dt = 1e-2;
+tmax = 0.4;
+t = 0:dt:tmax;
+alpha = 0.05;
+d = alpha*dt/dx^2;
+
+%Boundary conditions
+T_old= ones(N,1)*30;
+T_tip = 50; T_base=300;
+
+%Initialization
+
+T = T_old;
+for i=2:length(t)-1
+ 
+    for j=1:N
+        if j==1
+            T(j) = T_base;
+        elseif j==N
+            T(j) =T_tip;
+        else
+            T(j) = T(j) + d*(T(j+1) -2*T(j) +T(j-1));
+        end
+    
+    end
+     T_old = T;
+     time = dt*i;
+figure(1)
+    plot(x,T)
+    xlabel('position rod [m]')
+    ylabel('T[°C]')
+    dd = sprintf('d  =%.3f', d);
+    ttime = sprintf ('time = %.2f', time);
+    text(0.12, 230, dd)
+    text(0.12, 250, ttime)
+    shg
+    pause(0.01)
+end
